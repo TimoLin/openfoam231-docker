@@ -15,7 +15,7 @@ This will download an image from my repo and setup a container.
 Use it to check if everything is working well.
 
 ##### Getting Started
-Create a project directory within the $HOME/OpenFOAM directory named <USER>-2.1.1 (e.g. chris-2.2.2 for user chris and OpenFOAM version 2.2.2) and create a directory named run within it, e.g. by typing:
+Create a project directory within the $HOME/OpenFOAM directory named <USER>-2.2.2 (e.g. chris-2.2.2 for user chris and OpenFOAM version 2.2.2) and create a directory named run within it, e.g. by typing:
 
 ```bash
 mkdir -p $FOAM_RUN
