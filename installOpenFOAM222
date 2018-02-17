@@ -26,9 +26,9 @@
 #
 # Description
 #     this script will
-#     1) Pull openfoam211 from docker hub if it does not exist in the local
+#     1) Pull openfoam222 from docker hub if it does not exist in the local
 #        environment 
-#     2) Create a container with the name openfoam211
+#     2) Create a container with the name openfoam222
 #     3) Image is loaded with the post-processing tool : paraview/paraFoam
 #     4) Image comes with pre-installed utilities:
 #        Midnight Commander, gnuplot 
@@ -42,8 +42,8 @@ username="$USER"
 user="$(id -u)"
 home="${1:-$HOME}"
 
-imageName="konradmalik/openfoam211:latest"
-containerName="openfoam211"   
+imageName="konradmalik/openfoam222:latest"
+containerName="openfoam222"   
 displayVar="$DISPLAY"
 
 # List container name :
@@ -71,7 +71,7 @@ docker run  -it -d --name ${containerName} --user=${user}   \
     --volume="/etc/sudoers:/etc/sudoers:ro"                 \
     --volume="/etc/sudoers.d:/etc/sudoers.d:ro"             \
      -v=/tmp/.X11-unix:/tmp/.X11-unix ${imageName}          \
-     /bin/bash --rcfile /opt/openfoam211/etc/bashrc
+     /bin/bash --rcfile /opt/openfoam222/etc/bashrc
 
 
 echo "Container ${containerName} was created."
