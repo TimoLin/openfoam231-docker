@@ -38,4 +38,48 @@
 #
 #------------------------------------------------------------------------------
 
-docker start openfoam231 -i
+dockerName=openfoam231
+
+#docker start openfoam231 -i
+
+# The docker container is created using name.
+# Thus there will be only one container named as 
+
+# Get current running openfoam231 docker container
+container_id=$(docker ps -aqf "name=$dockerName")
+
+# Get the openfoam231 container's status
+container_status=$(docker container inspect -f '{{.State.Status}}' $dockerName)
+
+echo $container_status
+
+enterOF231()
+{
+    docker exec -it $container_id  /bin/bash
+}
+
+enterOF231root()
+{
+    docker exec -u root -it $container_id  /bin/bash
+}
+
+startOF231()
+{
+    docker start openfoam231 -i
+}
+
+# Handling different container status
+# https://docs.docker.com/engine/reference/commandline/ps/#status
+case $container_status in
+
+    running)
+        echo "Attaching container $dockerName:$container_id"
+        enterOF231
+        ;;
+        
+    created|exited|paused)
+        echo "Starting container $dockerName:$container_id"
+        startOF231
+        ;;
+esac
+
