@@ -38,5 +38,4 @@
 #
 #------------------------------------------------------------------------------
 
-xhost +local:openfoam222
-docker start openfoam222 -i
+docker start openfoam231 -i

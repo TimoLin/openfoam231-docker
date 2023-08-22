@@ -22,17 +22,16 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     installOpenFOAM
+#     prepareOpenFOAM
 #
 # Description
 #     this script will
-#     1) Pull openfoam222 from docker hub if it does not exist in the local
+#     1) Pull openfoam231 from docker hub if it does not exist in the local
 #        environment 
-#     2) Create a container with the name openfoam222
-#     3) Image is loaded with the post-processing tool : paraview/paraFoam
-#     4) Image comes with pre-installed utilities:
-#        Midnight Commander, gnuplot 
-#     5) This script has been tested up to docker version 1.12
+#     2) Create a container with the name openfoam231 in Ubuntu 18.04
+#     3) Image is loaded with the building enviromnment for OpenFOAM-2.3.1
+#     4) See building & installation guide at:
+#        https://openfoamwiki.net/index.php/Installation/Linux/OpenFOAM-2.3.1/Ubuntu#Ubuntu_18.04
 #
 #     Note: Docker daemon should be running before  launching script 
 #
@@ -41,10 +40,13 @@
 username="$USER"
 user="$(id -u)"
 home="${1:-$HOME}"
+ofHome="$home/OpenFOAM"
 
-imageName="konradmalik/openfoam222:latest"
-containerName="openfoam222"   
+imageName="ztnuaa/openfoam231:latest"
+containerName="openfoam231"   
 displayVar="$DISPLAY"
+
+# OpenFOAM enviroment list
 
 # List container name :
 echo "*******************************************************"
@@ -52,6 +54,7 @@ echo "Following Docker containers are present on your system:"
 echo "*******************************************************"
 docker ps -a 
 
+echo WM_CC
 
 # Create docker container for OpenFOAM operation   
 echo "*******************************************************"
@@ -60,19 +63,15 @@ echo "Creating Docker OpenFOAM container ${containerName}"
 
 docker run  -it -d --name ${containerName} --user=${user}   \
     -e USER=${username}                                     \
-    -e QT_X11_NO_MITSHM=1                                   \
-    -e DISPLAY=${displayVar}                                \
-    -e QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb                \
-    --workdir="${home}"                                     \
-    --volume="${home}:${home}"                              \
+    --workdir="$home"                                       \
+    --volume="$ofHome:$ofHome"                              \
     --volume="/etc/group:/etc/group:ro"                     \
     --volume="/etc/passwd:/etc/passwd:ro"                   \
     --volume="/etc/shadow:/etc/shadow:ro"                   \
     --volume="/etc/sudoers:/etc/sudoers:ro"                 \
     --volume="/etc/sudoers.d:/etc/sudoers.d:ro"             \
-     -v=/tmp/.X11-unix:/tmp/.X11-unix ${imageName}          \
-     /bin/bash --rcfile /opt/openfoam222/etc/bashrc
-
+    ${imageName}                                            \
+     /bin/bash --rcfile $ofHome'/OpenFOAM-2.3.1/etc/bashrc'
 
 echo "Container ${containerName} was created."
 

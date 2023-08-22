@@ -1,6 +1,7 @@
-FROM ubuntu:12.04
+FROM ubuntu:18.04
 
-RUN apt-get update && apt-get install -y wget apt-utils
-RUN sh -c "wget -O - http://dl.openfoam.org/gpg.key | apt-key add - && echo deb http://dl.openfoam.org/ubuntu precise main > /etc/apt/sources.list.d/openfoam.list"
-RUN apt-get update && apt-get install -y openfoam222 paraviewopenfoam3120
-RUN apt-get install -y nano sudo git mc gnuplot tmux make cmake
+RUN apt-get update && apt-get install -y apt-utils
+RUN apt-get install -y build-essential make cmake flex bison zlib1g-dev gnuplot \
+        libreadline-dev libncurses5-dev libxt-dev libopenmpi-dev openmpi-bin libboost-system-dev libboost-thread-dev libgmp-dev \
+        libmpfr-dev libcgal-dev gcc-5 g++-5
+RUN apt-get install -y vim sudo git wget
