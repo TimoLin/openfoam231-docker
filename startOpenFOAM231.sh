@@ -26,60 +26,66 @@
 #
 # Description
 #      This script will
-#          1) Start the OpenFOAM container with name 'openfoam222'
+#          1) Get the status of the container with name 'openfoam231'
+#          2) Start the OpenFOAM container with name 'openfoam231'
 #             in the the shell terminal. 
-#          2) Post-processing: Users can launch paraview/paraFoam from the
-#             terminal to post-process the results
+#          3) Enter the container if it's running and start the container if it's
+#             stopped.
 #      Note
-#          1) User should run xhost+ from other terminal
-#          2) Docker daemon should be running before launching this script 
-#          3) User can launch the script in a different shell to have
+#          1) Docker daemon should be running before launching this script 
+#          2) User can launch the script in a different shell to have
 #             create the OpenFOAM environment in a different terminal
 #
 #------------------------------------------------------------------------------
 
 dockerName=openfoam231
 
-#docker start openfoam231 -i
-
 # The docker container is created using name.
 # Thus there will be only one container named as 
 
 # Get current running openfoam231 docker container
 container_id=$(docker ps -aqf "name=$dockerName")
-
-# Get the openfoam231 container's status
-container_status=$(docker container inspect -f '{{.State.Status}}' $dockerName)
-
-echo $container_status
-
-enterOF231()
-{
-    docker exec -it $container_id  /bin/bash
-}
-
-enterOF231root()
-{
-    docker exec -u root -it $container_id  /bin/bash
-}
-
-startOF231()
-{
-    docker start openfoam231 -i
-}
-
-# Handling different container status
-# https://docs.docker.com/engine/reference/commandline/ps/#status
-case $container_status in
-
-    running)
-        echo "Attaching container $dockerName:$container_id"
-        enterOF231
-        ;;
-        
-    created|exited|paused)
-        echo "Starting container $dockerName:$container_id"
-        startOF231
-        ;;
-esac
-
+if [ -z "$container_id" ]
+then
+    # The container is not created!
+    echo "Error: Container $dockerName is not created!"
+    echo "Note:  Please run prepareOpenFOAM231.sh first!"
+    exit 1
+else
+    # Get the openfoam231 container's status
+    container_status=$(docker container inspect -f '{{.State.Status}}' $dockerName)
+    
+    enterOF231()
+    {
+        docker exec -it $container_id  /bin/bash
+    }
+    
+    enterOF231root()
+    {
+        docker exec -u root -it $container_id  /bin/bash
+    }
+    
+    startOF231()
+    {
+        docker start openfoam231 -i
+    }
+    
+    # Handling different container status
+    # https://docs.docker.com/engine/reference/commandline/ps/#status
+    case $container_status in
+    
+        running)
+            echo "Entering container $dockerName:$container_id..."
+            enterOF231
+            ;;
+            
+        created|exited|paused)
+            echo "Starting container $dockerName:$container_id..."
+            startOF231
+            ;;
+        *)
+            echo "Please check the container $dockerName:$container_id status $container_status."
+            exit 1
+            ;;
+    esac
+fi
