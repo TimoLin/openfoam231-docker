@@ -84,8 +84,8 @@ docker run  -it -d --name ${containerName} --user=${user}   \
 # If you want to use zsh:
 docker run  -it -d --name test --user=1000   \
     -e USER=zt \
-    --workdir="/home/zt"                                    \
-    --volume="/home/zt/OpenFOAM:/home/zt/OpenFOAM"          \
+    --workdir="$home"                                       \
+    --volume="$ofHome:$ofHome"                              \
     --volume="/etc/group:/etc/group:ro"                     \
     --volume="/etc/passwd:/etc/passwd:ro"                   \
     --volume="/etc/shadow:/etc/shadow:ro"                   \
