@@ -66,8 +66,8 @@ echo "*******************************************************"
 echo ""
 echo "Creating Docker OpenFOAM container ${containerName}"
 
-# If you want to use bash:
-'''
+# If you want to use bash, uncomment the following text:
+<< EOF
 docker run  -it -d --name ${containerName} --user=${user}   \
     -e USER=${username}                                     \
     --workdir="$home"                                       \
@@ -79,11 +79,11 @@ docker run  -it -d --name ${containerName} --user=${user}   \
     --volume="/etc/sudoers.d:/etc/sudoers.d:ro"             \
     ${imageName}                                            \
      /bin/bash --rcfile $ofHome'/OpenFOAM-2.3.1/etc/bashrc'
-'''
+EOF
 
 # If you want to use zsh:
-docker run  -it -d --name test --user=1000   \
-    -e USER=zt \
+docker run  -it -d --name ${containerName} --user=${user}   \
+    -e USER=${username}                                     \
     --workdir="$home"                                       \
     --volume="$ofHome:$ofHome"                              \
     --volume="/etc/group:/etc/group:ro"                     \
@@ -91,7 +91,7 @@ docker run  -it -d --name test --user=1000   \
     --volume="/etc/shadow:/etc/shadow:ro"                   \
     --volume="/etc/sudoers:/etc/sudoers:ro"                 \
     --volume="/etc/sudoers.d:/etc/sudoers.d:ro"             \
-    "ztnuaa/openfoam231:dev"                                            \
+    ${imageName}                                            \
     /bin/zsh
 
 echo "Container ${containerName} was created."
