@@ -40,8 +40,14 @@
 
 dockerName=openfoam231
 
+# If you want to use bash
+#shellName=/bin/bash
+
+# If you want to use zsh
+shellName=/bin/zsh
+
 # The docker container is created using name.
-# Thus there will be only one container named as 
+# Thus there will be only one container named as it
 
 # Get current running openfoam231 docker container
 container_id=$(docker ps -aqf "name=$dockerName")
@@ -57,12 +63,12 @@ else
     
     enterOF231()
     {
-        docker exec -it $container_id  /bin/bash
+        docker exec -it $container_id  $shellName
     }
     
     enterOF231root()
     {
-        docker exec -u root -it $container_id  /bin/bash
+        docker exec -u root -it $container_id $shellName
     }
     
     startOF231()

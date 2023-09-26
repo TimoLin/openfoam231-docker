@@ -56,11 +56,18 @@ docker ps -a
 
 echo WM_CC
 
+echo $username
+echo $user
+echo $home
+echo $ofHome
+
 # Create docker container for OpenFOAM operation   
 echo "*******************************************************"
 echo ""
 echo "Creating Docker OpenFOAM container ${containerName}"
 
+# If you want to use bash:
+'''
 docker run  -it -d --name ${containerName} --user=${user}   \
     -e USER=${username}                                     \
     --workdir="$home"                                       \
@@ -72,6 +79,20 @@ docker run  -it -d --name ${containerName} --user=${user}   \
     --volume="/etc/sudoers.d:/etc/sudoers.d:ro"             \
     ${imageName}                                            \
      /bin/bash --rcfile $ofHome'/OpenFOAM-2.3.1/etc/bashrc'
+'''
+
+# If you want to use zsh:
+docker run  -it -d --name test --user=1000   \
+    -e USER=zt \
+    --workdir="/home/zt"                                    \
+    --volume="/home/zt/OpenFOAM:/home/zt/OpenFOAM"          \
+    --volume="/etc/group:/etc/group:ro"                     \
+    --volume="/etc/passwd:/etc/passwd:ro"                   \
+    --volume="/etc/shadow:/etc/shadow:ro"                   \
+    --volume="/etc/sudoers:/etc/sudoers:ro"                 \
+    --volume="/etc/sudoers.d:/etc/sudoers.d:ro"             \
+    "ztnuaa/openfoam231:dev"                                            \
+    /bin/zsh
 
 echo "Container ${containerName} was created."
 
